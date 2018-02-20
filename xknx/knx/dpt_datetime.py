@@ -51,7 +51,7 @@ class DPTDateTime(DPTBase):
         seconds = values.get('seconds', 0)
 
         if not DPTDateTime._test_range(year, month, day, weekday, hours, minutes, seconds):
-            raise ConversionError("Cant serialize DPTDateTime", values=values)
+            raise ConversionError("Can't serialize DPTDateTime", values=values)
 
         return year - 1900, month, day, weekday << 5 | hours, minutes, seconds, 0, 0
 

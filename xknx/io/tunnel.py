@@ -53,9 +53,9 @@ class Tunnel():
                                     (self.gateway_ip, self.gateway_port))
 
         self.udp_client.register_callback(
-            self.tunnel_reqest_received, [TunnellingRequest.service_type])
+            self.tunnel_request_received, [TunnellingRequest.service_type])
 
-    def tunnel_reqest_received(self, knxipframe, udp_client):
+    def tunnel_request_received(self, knxipframe, udp_client):
         """Handle incoming tunnel request."""
         # pylint: disable=unused-argument
         if knxipframe.header.service_type_ident != \
@@ -69,7 +69,7 @@ class Tunnel():
                 self.telegram_received_callback(telegram)
 
     def send_ack(self, communication_channel_id, sequence_counter):
-        """Send tunneling ACK after tunneling request received."""
+        """Send tunnelling ACK after tunnelling request received."""
         ack_knxipframe = KNXIPFrame(self.xknx)
         ack_knxipframe.init(KNXIPServiceType.TUNNELLING_ACK)
         ack_knxipframe.body.communication_channel_id = communication_channel_id
@@ -78,7 +78,7 @@ class Tunnel():
         self.udp_client.send(ack_knxipframe)
 
     async def start(self):
-        """Start tunneling."""
+        """Start tunnelling."""
         await self.connect_udp()
         await self.connect()
 
@@ -113,7 +113,7 @@ class Tunnel():
 
     async def send_telegram(self, telegram):
         """
-        Send Telegram to routing tunelling device - retry mechanism.
+        Send Telegram to routing tunnelling device - retry mechanism.
 
         If a TUNNELLING_REQUEST frame is not confirmed within the TUNNELLING_REQUEST_TIME_- OUT
         time of one (1) second then the frame shall be repeated once with the same sequence counter
@@ -139,7 +139,7 @@ class Tunnel():
         self.increase_sequence_number()
 
     async def _send_telegram_impl(self, telegram):
-        """Send Telegram to routing tunelling device - implementation."""
+        """Send Telegram to routing tunnelling device - implementation."""
         tunnelling = Tunnelling(
             self.xknx,
             self.udp_client,
@@ -202,7 +202,7 @@ class Tunnel():
             self._reconnect_task = None
 
     async def stop(self):
-        """Stop tunneling."""
+        """Stop tunnelling."""
         # XXX: set disconnect ignore_error True here. Is there actually anything
         #      which can happen if disconnect fails? normally this fails because
         #      we have no connection...
@@ -229,8 +229,8 @@ class Tunnel():
 
     async def do_heartbeat_impl(self):
         """Heartbeat: checking connection state and handling result."""
-        connectionsstate = await self.connectionstate()
-        if connectionsstate:
+        connection_state = await self.connectionstate()
+        if connection_state:
             await self.do_heartbeat_success()
         else:
             await self.do_heartbeat_failed()

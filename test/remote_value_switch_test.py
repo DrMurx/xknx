@@ -107,7 +107,7 @@ class TestRemoteValueSwitch(unittest.TestCase):
         self.assertEqual(remote_value.value, RemoteValueSwitch.Value.OFF)
 
     def test_to_process_error(self):
-        """Test process errornous telegram."""
+        """Test process erroneous telegram."""
         xknx = XKNX(loop=self.loop)
         remote_value = RemoteValueSwitch(
             xknx,

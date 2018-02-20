@@ -92,7 +92,7 @@ class TestRemoteValueStep(unittest.TestCase):
         self.assertEqual(remote_value.value, RemoteValueStep.Direction.DECREASE)
 
     def test_to_process_error(self):
-        """Test process errornous telegram."""
+        """Test process erroneous telegram."""
         xknx = XKNX(loop=self.loop)
         remote_value = RemoteValueStep(
             xknx,

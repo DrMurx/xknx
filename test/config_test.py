@@ -327,7 +327,7 @@ class TestConfig(unittest.TestCase):
             self.assertEqual(mock_err.call_count, 1)
 
     def test_config_file_error(self):
-        """Test error message when reading an errornous config file."""
+        """Test error message when reading an erroneous config file."""
         with patch('logging.Logger.error') as mock_err, \
                 patch('xknx.core.Config.parse_group_light') as mock_parse:
             mock_parse.side_effect = XKNXException()
