@@ -91,9 +91,8 @@ class TelegramQueue():
         """Process telegram."""
         self.xknx.telegram_logger.debug(telegram)
         try:
-            if telegram.direction == TelegramDirection.INCOMING:
-                await self.process_telegram_incoming(telegram)
-            elif telegram.direction == TelegramDirection.OUTGOING:
+            await self.process_telegram_incoming(telegram)
+            if telegram.direction == TelegramDirection.OUTGOING:
                 await self.process_telegram_outgoing(telegram)
         except XKNXException as ex:
             self.xknx.logger.error("Error while processing telegram %s", ex)
