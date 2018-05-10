@@ -11,6 +11,7 @@ from .device import Device
 from .remote_value_color_rgb import RemoteValueColorRGB
 from .remote_value_switch import RemoteValueSwitch
 from .remote_value_scaling import RemoteValueScaling
+from .remote_value_controlled import RemoteValueControlled
 
 
 class Light(Device):
@@ -23,6 +24,7 @@ class Light(Device):
                  group_address_switch_state=None,
                  group_address_brightness=None,
                  group_address_brightness_state=None,
+                 group_address_dimm=None,
                  group_address_color=None,
                  group_address_color_state=None,
                  device_updated_cb=None):
@@ -34,6 +36,11 @@ class Light(Device):
             xknx,
             group_address_switch,
             group_address_switch_state,
+            device_name=self.name,
+            after_update_cb=self.after_update)
+        self.dimm = RemoteValueControlled(
+            xknx,
+            group_address_dimm,
             device_name=self.name,
             after_update_cb=self.after_update)
 
@@ -74,6 +81,8 @@ class Light(Device):
             config.get('group_address_brightness')
         group_address_brightness_state = \
             config.get('group_address_brightness_state')
+        group_address_dimm = \
+            config.get('group_address_dimm')
         group_address_color = \
             config.get('group_address_color')
         group_address_color_state = \
@@ -85,6 +94,7 @@ class Light(Device):
                    group_address_switch_state=group_address_switch_state,
                    group_address_brightness=group_address_brightness,
                    group_address_brightness_state=group_address_brightness_state,
+                   group_address_dimm=group_address_dimm,
                    group_address_color=group_address_color,
                    group_address_color_state=group_address_color_state)
 
@@ -92,6 +102,7 @@ class Light(Device):
         """Test if device has given group address."""
         return (self.switch.has_group_address(group_address) or
                 self.brightness.has_group_address(group_address) or
+                self.dimm.has_group_address(group_address) or
                 self.color.has_group_address(group_address))
 
     def __str__(self):
@@ -137,6 +148,18 @@ class Light(Device):
             return
         await self.brightness.set(brightness)
 
+    async def start_dimming_up(self, speed=1):
+        """Start dimming up."""
+        await self.dimm.start_upwards(speed)
+
+    async def start_dimming_down(self, speed=1):
+        """Start dimming down."""
+        await self.dimm.start_downwards(speed)
+
+    async def stop_dimming(self):
+        """Stop dimming."""
+        await self.dimm.stop()
+
     async def set_color(self, color):
         """Set color of light."""
         if not self.supports_color:
@@ -157,6 +180,14 @@ class Light(Device):
             await self.set_off()
         elif action.startswith("brightness:"):
             await self.set_brightness(int(action[11:]))
+        elif action == "dimm:0":
+            await self.stop_dimming()
+        elif action.startswith("dimm:"):
+            speed = int(action[5:])
+            if speed < 0:
+                await self.start_dimming_down(-speed)
+            else:
+                await self.start_dimming_up(speed)
         else:
             self.xknx.logger.warning("Could not understand action %s for device %s", action, self.get_name())
 

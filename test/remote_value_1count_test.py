@@ -68,7 +68,7 @@ class TestRemoteValue1Count(unittest.TestCase):
         self.assertEqual(remote_value.value, 100)
 
     def test_to_process_error(self):
-        """Test process errornous telegram."""
+        """Test process erroneous telegram."""
         xknx = XKNX(loop=self.loop)
         remote_value = RemoteValue1Count(
             xknx,

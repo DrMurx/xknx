@@ -85,7 +85,7 @@ class DPTControllerStatus(DPTBase):
     def to_knx(cls, value):
         """Serialize to KNX/IP raw data."""
         if value == HVACOperationMode.AUTO:
-            raise ConversionError("Cant serialize DPTControllerStatus", value=value)
+            raise ConversionError("Can't serialize DPTControllerStatus", value=value)
         elif value == HVACOperationMode.COMFORT:
             return (0x21,)
         elif value == HVACOperationMode.STANDBY:

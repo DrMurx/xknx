@@ -92,7 +92,7 @@ class TestRemoteValueUpDown(unittest.TestCase):
         self.assertEqual(remote_value.value, RemoteValueUpDown.Direction.DOWN)
 
     def test_to_process_error(self):
-        """Test process errornous telegram."""
+        """Test process erroneous telegram."""
         xknx = XKNX(loop=self.loop)
         remote_value = RemoteValueUpDown(
             xknx,
